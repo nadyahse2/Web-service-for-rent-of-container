@@ -35,7 +35,7 @@ class DockerManager:
         try:
             container = self.client.containers.get(container_id)
             container.start()
-            return f"Container {container_id} started."
+            return f"Container {container_id} started"
         except Exception as e:
             return f"Error starting container: {e}"
 
@@ -43,7 +43,7 @@ class DockerManager:
         try:
             container = self.client.containers.get(container_id)
             container.stop()
-            return f"Container {container_id} stopped."
+            return f"Container {container_id} stopped"
         except Exception as e:
             return f"Error stopping container: {e}"
 
@@ -51,7 +51,7 @@ class DockerManager:
         try:
             container = self.client.containers.get(container_id)
             container.remove()
-            return f"Container {container_id} removed."
+            return f"Container {container_id} removed"
         except Exception as e:
             return f"Error removing container: {e}"
     def _get_available_port(self):

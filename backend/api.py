@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 from docker_m import DockerManager
+from qemu_m import QemuManager
 
 app = Flask(__name__)
 docker_manager = DockerManager()
+qemu_manager = QemuManager()
 
 @app.route('/containers', methods=['POST'])
 def create_container():
@@ -26,6 +28,38 @@ def create_container():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 400
+
+
+@app.route('/vms', methods=['POST'])
+def create_vm():
+    try:
+        data = request.get_json()
+        name = data['name']
+        image = data['image']
+        mem = data['mem']
+        cpus = data['cpus']
+        disk_size = data['disk_size']
+
+        vm = qemu_manager.create_vm(name, image, mem, cpus, disk_size)
+        return jsonify(vm), 201
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/vms/<name>/start', methods=['POST'])
+def start_vm(name):
+    result = qemu_manager.start_vm(name)
+    return jsonify({'message': result}), 200
+
+@app.route('/vms/<name>/stop', methods=['POST'])
+def stop_vm(name):
+    result = qemu_manager.stop_vm(name)
+    return jsonify({'message': result}), 200
+
+@app.route('/vms/<name>', methods=['DELETE'])
+def remove_vm(name):
+    result = qemu_manager.remove_vm(name)
+    return jsonify({'message': result}), 200
 
 @app.route('/containers/<container_id>/start', methods=['POST'])
 def start_container(container_id):
