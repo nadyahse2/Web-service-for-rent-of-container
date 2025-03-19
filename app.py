@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from docker_m import DockerManager
 from qemu_m import QemuManager
+import traceback
 
 app = Flask(__name__)
 docker_manager = DockerManager()
@@ -29,7 +30,7 @@ def create_container():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-
+            #/vms
 @app.route('/vms', methods=['POST'])
 def create_vm():
     try:
@@ -41,9 +42,11 @@ def create_vm():
         disk_size = data['disk_size']
 
         vm = qemu_manager.create_vm(name, image, mem, cpus, disk_size)
+        
         return jsonify(vm), 201
 
     except Exception as e:
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 400
 
 @app.route('/vms/<name>/start', methods=['POST'])

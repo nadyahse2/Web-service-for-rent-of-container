@@ -59,6 +59,7 @@ def remove_container(container_id):
 def create_vm(name, image, mem, cpus, disk_size):
     try:
         payload = {"name": name, "image": image, "mem": mem, "cpus": cpus, "disk_size": disk_size}
+        st.write(json.dumps(payload, indent=4))
         response = requests.post(f"{BACKEND_URL}/vms", json=payload)
         response.raise_for_status()
         data = response.json()
